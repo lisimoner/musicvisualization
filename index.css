@@ -92,16 +92,8 @@ body {
   justify-content: center;
   align-items: center;
 }
-.status_bar img {
-  width: 56px;
-}
-
-.status_bar a {
-  text-decoration: none;
-  color: #1890ff;
-  line-height: 1.5;
-  font-size: 24px;
-  margin-left: 24px;
+.status_bar > img {
+  width: 40px;
 }
 
 .animation {

@@ -1,35 +1,35 @@
-// 去除敲击序列中的暂停区间
-// function normalizeSequence(sequence) {
-//   let curStartTime = 0;
-//   let havePassedTime = 0;
-//   let targetSeq = [];
-//   for (let item of sequence) {
-//     switch (item.type) {
-//       case 'start':
-//       case 'restart': {
-//         curStartTime = item.time;
-//         break;
-//       }
-//       case 'pause':
-//       case 'stop': {
-//         havePassedTime += item.time - curStartTime;
-//         break;
-//       }
-//       case 'music': {
-//         targetSeq.push({
-//           time: havePassedTime + (item.time - curStartTime),
-//           audio: item.audio,
-//           animation: item.animation,
-//         });
-//         break;
-//       }
-//     }
-//   }
-//   return {
-//     duration: havePassedTime,
-//     sequence: targetSeq,
-//   };
-// }
+// 处理录制序列
+function normalizeSequence(sequence) {
+  let curStartTime = 0;
+  let havePassedTime = 0;
+  let targetSeq = [];
+  for (let item of sequence) {
+    switch (item.type) {
+      case 'start':
+      case 'restart': {
+        curStartTime = item.time;
+        break;
+      }
+      case 'pause':
+      case 'stop': {
+        havePassedTime += item.time - curStartTime;
+        break;
+      }
+      case 'music': {
+        targetSeq.push({
+          time: havePassedTime + (item.time - curStartTime),
+          audio: item.audio,
+          animation: item.animation,
+        });
+        break;
+      }
+    }
+  }
+  return {
+    duration: havePassedTime,
+    sequence: targetSeq,
+  };
+}
 
 const audio00 = './assets/audio/沙锤.mp3';
 const audio01 = './assets/audio/脚鼓.mp3';
@@ -120,7 +120,7 @@ function stopRecording() {
     type: 'stop',
     time: Date.now(),
   });
-  // replay();
+  replay();
   recordingSequence = [];
 }
 function stroke(row, col) {
@@ -135,22 +135,22 @@ function stroke(row, col) {
     });
   }
 }
-// function replay() {
-//   const { duration, sequence } = normalizeSequence(recordingSequence);
-//   const replayBgMusicObj = new Audio(bgMusic);
-//   bgChangeCnt = 0;
-//   replayBgMusicObj.play();
-//   setTimeout(() => {
-//     replayBgMusicObj.pause();
-//   }, duration);
-//   for (let item of sequence) {
-//     setTimeout(() => {
-//       changeBackground();
-//       new Audio(item.audio).play();
-//       item.animation();
-//     }, item.time);
-//   }
-// }
+function replay() {
+  const { duration, sequence } = normalizeSequence(recordingSequence);
+  const replayBgMusicObj = new Audio(bgMusic);
+  bgChangeCnt = 0;
+  replayBgMusicObj.play();
+  setTimeout(() => {
+    replayBgMusicObj.pause();
+  }, duration);
+  for (let item of sequence) {
+    setTimeout(() => {
+      changeBackground();
+      new Audio(item.audio).play();
+      item.animation();
+    }, item.time);
+  }
+}
 
 document.querySelector('#rect11').onclick = function () {
   stroke(0, 0);
@@ -176,55 +176,72 @@ document.querySelector('#rect23').onclick = function () {
   stroke(1, 2);
   animations[5]();
 };
-
+window.onkeypress = function(e){
+  if(e.key == 'q') {
+    stroke(0, 0);
+    animations[0]();
+  }else if(e.key == 'w') {
+    stroke(0, 1);
+    animations[1]();
+  }else if(e.key == 'e'){
+    stroke(0, 2);
+    animations[2]();
+  }else if(e.key == 'a') {
+    stroke(1, 0);
+    animations[3]();
+  }else if(e.key == 's') {
+    stroke(1, 1);
+    animations[4]();
+  }else if(e.key == 'd') {
+    stroke(1, 2);
+    animations[5]();
+  }
+  
+}
 document.querySelector('#pauseIcon').onclick = pauseRecording;
 document.querySelector('#stopIcon').onclick = stopRecording;
 document.querySelector('#startIcon').onclick = startRecording;
 
 //添加键盘敲击事件
-document.onkeydown = function (evt) {
-  const keyCode = evt.keyCode;
-  if (keyCode < 65 || keyCode > 90) {
-    return;
-  }
-  if (keyCode === 81) {
-    keydown(0, 0, 0);
-  } else if (keyCode === 87) {
-    keydown(0, 1, 1);
-  } else if (keyCode === 69) {
-    keydown(0, 2, 2);
-  } else if (keyCode === 65) {
-    keydown(1, 0, 3);
-  } else if (keyCode === 83) {
-    keydown(1, 1, 4);
-  } else if (keyCode === 68) {
-    keydown(1, 2, 5);
-  } else {
-    switch (keyCode % 6) {
-      case 0:
-        keydown(0, 0, 0);
-        break;
-      case 1:
-        keydown(0, 1, 1);
-        break;
-      case 2:
-        keydown(0, 2, 2);
-        break;
-      case 3:
-        keydown(1, 0, 3);
-        break;
-      case 4:
-        keydown(1, 1, 4);
-        break;
-      case 5:
-        keydown(1, 2, 5);
-        break;
-      default:
-        break;
+document.onkeydown = function(evt){
+    if(evt.keyCode === 81){
+      keydown(0,0,0);
+    }else if(evt.keyCode === 87){
+      keydown(0,1,1);
+    }else if(evt.keyCode === 69){
+      keydown(0,2,2);
+    }else if(evt.keyCode === 65){
+      keydown(1,0,3);
+    }else if(evt.keyCode === 83){
+      keydown(1,1,4);
+    }else if(evt.keyCode === 68){
+      keydown(1,2,5);
+    }else {
+      switch (evt.keyCode % 6){
+        case 0:
+          keydown(0,0,0);
+          break;
+        case 1:
+          keydown(0,1,1);
+          break;
+        case 2:
+          keydown(0,2,2);
+          break;
+        case 3:
+          keydown(1,0,3);
+          break;
+        case 4:
+          keydown(1,1,4);
+          break;
+        case 5:
+          keydown(1,2,5);
+          break;
+        default:
+          break;
+      }
     }
-  }
-};
-function keydown(i, j, k) {
-  stroke(i, j);
-  animations[k]();
+}
+function keydown(i,j,k){
+    stroke(i,j);
+    animations[k]();
 }
