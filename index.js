@@ -176,28 +176,6 @@ document.querySelector('#rect23').onclick = function () {
   stroke(1, 2);
   animations[5]();
 };
-window.onkeypress = function(e){
-  if(e.key == 'q') {
-    stroke(0, 0);
-    animations[0]();
-  }else if(e.key == 'w') {
-    stroke(0, 1);
-    animations[1]();
-  }else if(e.key == 'e'){
-    stroke(0, 2);
-    animations[2]();
-  }else if(e.key == 'a') {
-    stroke(1, 0);
-    animations[3]();
-  }else if(e.key == 's') {
-    stroke(1, 1);
-    animations[4]();
-  }else if(e.key == 'd') {
-    stroke(1, 2);
-    animations[5]();
-  }
-  
-}
 document.querySelector('#pauseIcon').onclick = pauseRecording;
 document.querySelector('#stopIcon').onclick = stopRecording;
 document.querySelector('#startIcon').onclick = startRecording;
